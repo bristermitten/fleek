@@ -24,6 +24,7 @@ packages:
     - maven
     - nodePackages_latest.node-gyp
     - pinentry_mac
+    - telnet
 paths:
     - $HOME/bin
     - $HOME/.local/bin
