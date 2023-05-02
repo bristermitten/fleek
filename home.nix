@@ -34,7 +34,6 @@
     pkgs.inetutils
     pkgs.nil
     pkgs.emacs
-    pkgs.jetbrains-toolbox
     # Fleek Bling
     pkgs.git
     pkgs.htop
