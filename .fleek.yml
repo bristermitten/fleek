@@ -28,6 +28,7 @@ packages:
     - nil
     - emacs
     - nixpkgs-fmt
+    - ghc
 paths:
     - $HOME/bin
     - $HOME/.local/bin

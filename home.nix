@@ -35,6 +35,7 @@
     pkgs.nil
     pkgs.emacs
     pkgs.nixpkgs-fmt
+    pkgs.ghc
     # Fleek Bling
     pkgs.git
     pkgs.htop

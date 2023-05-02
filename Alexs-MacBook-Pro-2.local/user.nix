@@ -10,5 +10,7 @@
       ''
     ;
 
+    enableSyntaxHighlighting = true;
+
   };
 }
