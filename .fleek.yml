@@ -26,6 +26,7 @@ packages:
     - pinentry_mac
     - inetutils
     - nil
+    - emacs
 paths:
     - $HOME/bin
     - $HOME/.local/bin

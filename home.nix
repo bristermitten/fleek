@@ -33,6 +33,7 @@
     pkgs.pinentry_mac
     pkgs.inetutils
     pkgs.nil
+    pkgs.emacs
     # Fleek Bling
     pkgs.git
     pkgs.htop
