@@ -32,7 +32,7 @@
     pkgs.nodePackages_latest.node-gyp
     pkgs.pinentry_mac
     pkgs.inetutils
-    pkgs.nix
+    pkgs.nixpkgs.nix
     # Fleek Bling
     pkgs.git
     pkgs.htop

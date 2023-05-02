@@ -25,7 +25,7 @@ packages:
     - nodePackages_latest.node-gyp
     - pinentry_mac
     - inetutils
-    - nix
+    - nixpkgs.nix
 paths:
     - $HOME/bin
     - $HOME/.local/bin
