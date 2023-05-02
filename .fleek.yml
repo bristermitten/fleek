@@ -29,6 +29,7 @@ packages:
     - emacs
     - nixpkgs-fmt
     - ghc
+    - cabal
 paths:
     - $HOME/bin
     - $HOME/.local/bin
