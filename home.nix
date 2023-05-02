@@ -36,7 +36,7 @@
     pkgs.emacs
     pkgs.nixpkgs-fmt
     pkgs.ghc
-    pkgs.cabal
+    pkgs.cabal-install
     # Fleek Bling
     pkgs.git
     pkgs.htop
