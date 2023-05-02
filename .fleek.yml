@@ -27,6 +27,7 @@ packages:
     - inetutils
     - nil
     - emacs
+    - nixpkgs-fmt
 paths:
     - $HOME/bin
     - $HOME/.local/bin
