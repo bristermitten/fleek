@@ -27,6 +27,7 @@ packages:
     - inetutils
     - nil
     - emacs
+    - jetbrains-toolbox
 paths:
     - $HOME/bin
     - $HOME/.local/bin
