@@ -1,0 +1,37 @@
+aliases:
+    fleeks: cd /Users/alex/.local/share/fleek
+bling: high
+ejected: false
+flakedir: .local/share/fleek
+git:
+    autocommit: false
+    autopull: false
+    autopush: false
+    enabled: false
+name: Fleek Configuration
+packages:
+    - rustup
+    - haskell-language-server
+    - zsh-autosuggestions
+    - R
+    - gnupg
+    - nixpacks
+    - yarn
+    - nodejs
+    - cairo
+    - kotlin
+    - maven
+    - nodePackages_latest.node-gyp
+paths:
+    - $HOME/bin
+    - $HOME/.local/bin
+programs:
+    - helix
+    - dircolors
+shell: zsh
+systems:
+    - arch: aarch64
+      hostname: Alexs-MacBook-Pro-2.local
+      os: darwin
+      username: alex
+unfree: true
