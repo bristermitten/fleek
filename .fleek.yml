@@ -30,6 +30,7 @@ packages:
     - nixpkgs-fmt
     - ghc
     - cabal-install
+    - kotlin-language-server
 paths:
     - $HOME/bin
     - $HOME/.local/bin
