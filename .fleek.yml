@@ -22,6 +22,7 @@ packages:
     - kotlin
     - maven
     - nodePackages_latest.node-gyp
+    - pinentry_mac
 paths:
     - $HOME/bin
     - $HOME/.local/bin

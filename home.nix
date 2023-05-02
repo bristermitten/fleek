@@ -30,6 +30,7 @@
     pkgs.kotlin
     pkgs.maven
     pkgs.nodePackages_latest.node-gyp
+    pkgs.pinentry_mac
     # Fleek Bling
     pkgs.git
     pkgs.htop
