@@ -1,5 +1,6 @@
 aliases:
     fleeks: cd /Users/alex/.local/share/fleek
+    pinentry-mac: ~/.nix-profile/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
 bling: high
 ejected: false
 flakedir: .local/share/fleek
