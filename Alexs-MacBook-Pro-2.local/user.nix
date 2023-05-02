@@ -3,9 +3,10 @@
   # configs mentioned here must be listed in ~/fleek.yml #programs array or you will get errors
  programs.zsh =  {
   enableAutosuggestions = true;
-  completionInit = [
-      "autoload -Uz compinit && compinit" "zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'"
-  ];
+  completionInit =
+      "autoload -Uz compinit && compinit" 
+      "zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'"
+  ;
   
 };
 }
