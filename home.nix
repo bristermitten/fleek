@@ -38,6 +38,7 @@
     pkgs.ghc
     pkgs.cabal-install
     pkgs.kotlin-language-server
+    pkgs.julia
     # Fleek Bling
     pkgs.git
     pkgs.htop

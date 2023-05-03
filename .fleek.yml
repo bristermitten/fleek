@@ -31,6 +31,7 @@ packages:
     - ghc
     - cabal-install
     - kotlin-language-server
+    - julia
 paths:
     - $HOME/bin
     - $HOME/.local/bin
