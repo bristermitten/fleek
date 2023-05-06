@@ -32,6 +32,7 @@ packages:
     - cabal-install
     - kotlin-language-server
     - julia
+    - pkg-config
 paths:
     - $HOME/bin
     - $HOME/.local/bin
