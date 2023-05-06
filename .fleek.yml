@@ -17,8 +17,6 @@ packages:
     - R
     - gnupg
     - nixpacks
-    - yarn
-    - nodejs
     - cairo
     - kotlin
     - maven

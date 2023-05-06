@@ -24,8 +24,6 @@
     pkgs.R
     pkgs.gnupg
     pkgs.nixpacks
-    pkgs.yarn
-    pkgs.nodejs
     pkgs.cairo
     pkgs.kotlin
     pkgs.maven
