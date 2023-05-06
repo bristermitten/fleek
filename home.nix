@@ -39,6 +39,7 @@
     pkgs.cabal-install
     pkgs.kotlin-language-server
     pkgs.pkg-config
+    pkgs.pixman
     # Fleek Bling
     pkgs.git
     pkgs.htop
