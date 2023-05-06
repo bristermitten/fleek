@@ -33,6 +33,7 @@ packages:
     - kotlin-language-server
     - pkg-config
     - pixman
+    - python39
 paths:
     - $HOME/bin
     - $HOME/.local/bin

@@ -40,6 +40,7 @@
     pkgs.kotlin-language-server
     pkgs.pkg-config
     pkgs.pixman
+    pkgs.python39
     # Fleek Bling
     pkgs.git
     pkgs.htop
