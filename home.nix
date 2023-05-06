@@ -37,7 +37,7 @@
     pkgs.nixpkgs-fmt
     pkgs.ghc
     pkgs.cabal-install
-    pkgs.kotlin-language-servera
+    pkgs.kotlin-language-server
     pkgs.pkg-config
     # Fleek Bling
     pkgs.git
