@@ -1,6 +1,7 @@
 {
   description = "Fleek Configuration";
 
+
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -13,6 +14,7 @@
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {
+    defaultPackage.aarch64-darwin = home-manager.defaultPackage.aarch64-darwin;
 
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
