@@ -32,7 +32,6 @@
           # Host Specific configs
           ./Alexs-MacBook-Pro-2.local/Alexs-MacBook-Pro-2.local.nix
           ./Alexs-MacBook-Pro-2.local/user.nix
-          #./spotify.nix
         ];
       };
       
