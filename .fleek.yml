@@ -1,14 +1,15 @@
 aliases:
+    apply-Alexs-MacBook-Pro-2.local: nix run --impure home-manager/master -- -b bak switch --flake .#alex@Alexs-MacBook-Pro-2.local
     fleeks: cd /Users/alex/.local/share/fleek
     pinentry-mac: ~/.nix-profile/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
 bling: high
-ejected: false
+ejected: true
 flakedir: .local/share/fleek
 git:
-    autocommit: true
-    autopull: true
-    autopush: true
-    enabled: true
+    autocommit: false
+    autopull: false
+    autopush: false
+    enabled: false
 name: Fleek Configuration
 packages:
     - rustup

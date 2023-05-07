@@ -21,3 +21,5 @@ Your actual aliases are listed below:
     apply-Alexs-MacBook-Pro-2.local = "nix run --impure home-manager/master -- -b bak switch --flake .#alex@Alexs-MacBook-Pro-2.local";
 
     fleeks = "cd /Users/alex/.local/share/fleek";
+
+    pinentry-mac = "~/.nix-profile/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac";
