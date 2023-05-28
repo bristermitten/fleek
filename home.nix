@@ -1,23 +1,31 @@
+
+let
+    myOverlay = self: super: {
+      # breaks things
+      # discord-ptb = super.discord-ptb.override { withOpenASAR = true; };
+    };
+  in
 { config, pkgs, misc, ... }: {
   nixpkgs = {
     # Configure your nixpkgs instance
     config = {
       # Disable if you don't want unfree packages
-      
+
       allowUnfree = true;
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
       allowUnfreePredicate = (_: true);
-      
+
     };
+    #overlays = [myOverlay];
   };
 
-  
   # packages are just installed (no configuration applied)
   # programs are installed and configuration applied to dotfiles
-  home.packages = [
+  home.packages = with pkgs; [
     # user selected packages
+    discord
     pkgs.rustup
-    pkgs.haskell-language-server
+    pkgs.cachix
     pkgs.zsh-autosuggestions
     pkgs.R
     pkgs.gnupg
@@ -31,8 +39,6 @@
     pkgs.nil
     pkgs.emacs
     pkgs.nixpkgs-fmt
-    pkgs.ghc
-    pkgs.cabal-install
     pkgs.kotlin-language-server
     pkgs.pkg-config
     pkgs.pixman
@@ -46,16 +52,15 @@
     pkgs.fzf
     pkgs.ripgrep
     pkgs.vscode
-    pkgs.lazygit
     pkgs.jq
     pkgs.yq
     pkgs.neovim
     pkgs.neofetch
     pkgs.btop
     pkgs.cheat
-    (pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; })
+    (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
-  fonts.fontconfig.enable = true; 
+  fonts.fontconfig.enable = true;
   home.stateVersion = "22.11"; # To figure this out (in-case it changes) you can comment out the line and see what version it expected.
   programs.home-manager.enable = true;
 }

@@ -1,6 +1,7 @@
 { pkgs, misc, ... }: {
- home.sessionPath = [ 
+  home.sessionPath = [
     "$HOME/bin"
     "$HOME/.local/bin"
- ];
+    "/opt/homebrew/bin"
+  ];
 }
