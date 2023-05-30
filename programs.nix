@@ -24,4 +24,5 @@
   programs.vscode = {
     enable = true;
   };
+
 }

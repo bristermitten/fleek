@@ -1,10 +1,9 @@
-
 let
-    myOverlay = self: super: {
-      # breaks things
-      # discord-ptb = super.discord-ptb.override { withOpenASAR = true; };
-    };
-  in
+  myOverlay = self: super: {
+    # breaks things
+    # discord-ptb = super.discord-ptb.override { withOpenASAR = true; };
+  };
+in
 { config, pkgs, misc, ... }: {
   nixpkgs = {
     # Configure your nixpkgs instance
@@ -31,8 +30,6 @@ let
     pkgs.gnupg
     pkgs.nixpacks
     pkgs.cairo
-    pkgs.kotlin
-    pkgs.maven
     pkgs.nodePackages_latest.node-gyp
     pkgs.pinentry_mac
     pkgs.inetutils
