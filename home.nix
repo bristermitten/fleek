@@ -1,10 +1,15 @@
+{ config, pkgs, misc, ... }@inputs:
 let
-  myOverlay = self: super: {
-    # breaks things
-    # discord-ptb = super.discord-ptb.override { withOpenASAR = true; };
+  cachedNixShell = pkgs.fetchFromGitHub {
+    owner = "xzfc";
+    repo = "cached-nix-shell";
+    rev = "59b11bf82c409529410f066d6c2159fac9aa9aa7";
+    sha256 = "sha256-sHsUsqGeAZW1OMbeqQdLqb7LgEvhzWM7jq17EU16K0A";
   };
+
+  frameworks = pkgs.darwin.apple_sdk.frameworks;
 in
-{ config, pkgs, misc, ... }: {
+{
   nixpkgs = {
     # Configure your nixpkgs instance
     config = {
@@ -18,12 +23,13 @@ in
     #overlays = [myOverlay];
   };
 
+
   # packages are just installed (no configuration applied)
   # programs are installed and configuration applied to dotfiles
-  home.packages = with pkgs; [
-    # user selected packages
+home.packages = (with pkgs; [
+    cachedNixShell
     discord
-    pkgs.rustup
+    rustup
     pkgs.cachix
     pkgs.zsh-autosuggestions
     pkgs.R
@@ -51,12 +57,11 @@ in
     pkgs.vscode
     pkgs.jq
     pkgs.yq
-    pkgs.neovim
     pkgs.neofetch
     pkgs.btop
     pkgs.cheat
     (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-  ];
+  ]);
   fonts.fontconfig.enable = true;
   home.stateVersion = "22.11"; # To figure this out (in-case it changes) you can comment out the line and see what version it expected.
   programs.home-manager.enable = true;

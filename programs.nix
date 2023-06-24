@@ -18,11 +18,24 @@
   programs.starship.enable = true;
 
   # User specified programs 
-  programs.helix.enable = true;
+  programs.helix.enable = false;
   programs.dircolors.enable = true;
 
   programs.vscode = {
     enable = true;
+  };
+
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+
+    plugins = with pkgs.vimPlugins; [
+      nvim-lspconfig
+      nvim-treesitter.withAllGrammars
+    ];
   };
 
 }

@@ -9,8 +9,14 @@
   programs.bat.config = {
     theme = "TwoDark";
   };
+
+  programs.bash = {
+    enable = true;
+  };
+  
   # zsh
   programs.zsh = {
+
     profileExtra = "[ -r ~/.nix-profile/etc/profile.d/nix.sh ] && source  ~/.nix-profile/etc/profile.d/nix.sh";
 
     enable = true;
