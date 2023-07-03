@@ -30,6 +30,7 @@ home.packages = (with pkgs; [
     cachedNixShell
     discord
     rustup
+    bash
     pkgs.cachix
     pkgs.zsh-autosuggestions
     pkgs.R

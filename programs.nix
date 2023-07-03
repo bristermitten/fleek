@@ -18,7 +18,6 @@
   programs.starship.enable = true;
 
   # User specified programs 
-  programs.helix.enable = false;
   programs.dircolors.enable = true;
 
   programs.vscode = {
@@ -34,8 +33,20 @@
 
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig
+      plenary-nvim
+      {
+        plugin = haskell-tools-nvim;
+        type = "lua";
+        config = builtins.readFile(./neovim/haskell.lua); 
+      }
+      telescope-nvim
       nvim-treesitter.withAllGrammars
     ];
+
+    extraConfig = ''
+    autocmd BufReadPost *.kts setlocal filetype=kotlin
+    autocmd BufReadPost *.kts setlocal filetype=kotlin
+    '';
   };
 
 }
