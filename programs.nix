@@ -33,6 +33,7 @@
 
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig
+      nvim-dap
       plenary-nvim
       {
         plugin = haskell-tools-nvim;
@@ -40,12 +41,32 @@
         config = builtins.readFile(./neovim/haskell.lua); 
       }
       telescope-nvim
-      nvim-treesitter.withAllGrammars
+
+      # Tree sitter
+      {
+        plugin = nvim-treesitter.withAllGrammars;
+        type = "lua";
+        config = ''
+          require('nvim-treesitter.configs').setup{
+            highlight = {
+              enable = true,
+              additional_vim_regex_highlighting = false,
+            },
+          }
+        '';
+      }
+      onedark-nvim
     ];
 
     extraConfig = ''
-    autocmd BufReadPost *.kts setlocal filetype=kotlin
-    autocmd BufReadPost *.kts setlocal filetype=kotlin
+      " Set .kts files as Kotlin
+      autocmd BufReadPost *.kts setlocal filetype=kotlin
+      autocmd BufReadPost *.kts setlocal filetype=kotlin
+    '';
+
+    extraLuaConfig = ''
+      -- Enable Colour Scheme
+      require('onedark').load()
     '';
   };
 
