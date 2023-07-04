@@ -27,7 +27,7 @@
         pkgs = nixpkgs.legacyPackages.aarch64-darwin; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
         modules = [
-          ./home.nix         
+          ./home.nix
           ./path.nix
           ./shell.nix
           ./user.nix
