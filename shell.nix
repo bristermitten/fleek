@@ -13,7 +13,7 @@
   programs.bash = {
     enable = true;
   };
- 
+
   # zsh
   programs.zsh = {
 
@@ -21,7 +21,7 @@
       [ -r ~/.nix-profile/etc/profile.d/nix.sh ] && source  ~/.nix-profile/etc/profile.d/nix.sh
 
       bindkey -e # explicitly disable vi emulation as $EDITOR might turn it on
-      '';
+    '';
 
     enable = true;
     enableCompletion = true;
