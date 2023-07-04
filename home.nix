@@ -26,42 +26,48 @@ in
 
   # packages are just installed (no configuration applied)
   # programs are installed and configuration applied to dotfiles
-home.packages = (with pkgs; [
+  home.packages = (with pkgs; [
     cachedNixShell
     discord
     rustup
     bash
-    pkgs.cachix
-    pkgs.zsh-autosuggestions
-    pkgs.R
-    pkgs.gnupg
-    pkgs.nixpacks
-    pkgs.cairo
-    pkgs.nodePackages_latest.node-gyp
-    pkgs.pinentry_mac
-    pkgs.inetutils
-    pkgs.nil
-    pkgs.emacs
-    pkgs.nixpkgs-fmt
-    pkgs.kotlin-language-server
-    pkgs.pkg-config
-    pkgs.pixman
-    pkgs.python39
-    pkgs.spotify
-    # Fleek Bling
-    pkgs.git
-    pkgs.htop
-    pkgs.github-cli
-    pkgs.glab
-    pkgs.fzf
-    pkgs.ripgrep
-    pkgs.vscode
-    pkgs.jq
-    pkgs.yq
-    pkgs.neofetch
-    pkgs.btop
-    pkgs.cheat
-    (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+
+    # Haskell
+    haskellPackages.hoogle
+    haskellPackages.fast-tags
+
+
+    cachix
+    zsh-autosuggestions
+    R
+    gnupg
+    nixpacks
+    cairo
+    nodePackages_latest.node-gyp
+    pinentry_mac
+    inetutils
+    nil
+    emacs
+    nixpkgs-fmt
+    kotlin-language-server
+    pkg-config
+    pixman
+    python39
+    spotify
+
+    git
+    htop
+    github-cli
+    glab
+    fzf
+    ripgrep
+    vscode
+    jq
+    yq
+    neofetch
+    btop
+    cheat
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ]);
   fonts.fontconfig.enable = true;
   home.stateVersion = "22.11"; # To figure this out (in-case it changes) you can comment out the line and see what version it expected.
