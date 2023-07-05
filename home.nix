@@ -32,6 +32,13 @@ in
     rustup
     bash
 
+    obsidian
+
+    # NodeJS
+    nodejs
+    yarn
+    nodePackages.pnpm
+
     # Haskell
     haskellPackages.hoogle
     haskellPackages.fast-tags
