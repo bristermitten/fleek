@@ -7,7 +7,6 @@
   programs.exa.enable = true;
   programs.bat.enable = true;
   programs.atuin.enable = true;
-  programs.zoxide.enable = true;
   programs.direnv = {
     enable = true;
 
@@ -35,6 +34,7 @@
       nvim-lspconfig
       nvim-dap
       plenary-nvim
+
       {
         plugin = haskell-tools-nvim;
         type = "lua";
@@ -55,6 +55,7 @@
           }
         '';
       }
+      nvim-nu
       onedark-nvim
     ];
 
