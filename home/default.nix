@@ -5,6 +5,7 @@
       common = {
         home.stateVersion = "22.11";
         imports = [
+          ./extra.nix
           ./tmux.nix
           ./neovim.nix
           ./starship.nix
