@@ -1,2 +1,0 @@
-require('haskell-tools').setup {}
-

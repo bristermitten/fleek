@@ -1,44 +1,124 @@
 {
-  description = "Fleek Configuration";
-
+  description = "Srid's NixOS / nix-darwin configuration";
 
   inputs = {
-    # Nixpkgs
+    # Principle inputs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    # Home manager
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    nix-darwin.url = "github:lnl7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    nixos-flake.url = "github:srid/nixos-flake";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    prismlauncher.url = "github:PrismLauncher/PrismLauncher";
+    # CI server
+    sops-nix.url = "github:juspay/sops-nix/json-nested"; # https://github.com/Mic92/sops-nix/pull/328
+    jenkins-nix-ci.url = "github:juspay/jenkins-nix-ci";
+    # jenkins-nix-ci.url = "path:/home/srid/code/jenkins-nix-ci";
+    nix-serve-ng.url = "github:aristanetworks/nix-serve-ng";
+
+    # Software inputs
+    nixos-shell.url = "github:Mic92/nixos-shell";
+    nixos-vscode-server.flake = false;
+    nixos-vscode-server.url = "github:nix-community/nixos-vscode-server";
+    emanote.url = "github:srid/emanote";
+    nixpkgs-match.url = "github:srid/nixpkgs-match";
+    nuenv.url = "github:DeterminateSystems/nuenv";
+    nixd.url = "github:nix-community/nixd";
+
+    # Emacs
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
+
+    # Vim & its plugins (not in nixpkgs)
+    zk-nvim.url = "github:mickael-menu/zk-nvim";
+    zk-nvim.flake = false;
+    coc-rust-analyzer.url = "github:fannheyward/coc-rust-analyzer";
+    coc-rust-analyzer.flake = false;
+
+    # Devshell
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs = { nixpkgs, home-manager, prismlauncher, ... }@inputs: {
-    defaultPackage.aarch64-darwin = home-manager.defaultPackage.aarch64-darwin;
+  outputs = inputs@{ self, ... }:
+    inputs.flake-parts.lib.mkFlake { inherit (inputs) self; } {
+      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.nixos-flake.flakeModule
+        ./users
+        ./home
+        ./nixos
+        ./nix-darwin
+      ];
 
-    formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;
+      flake = {
+        # Configurations for Linux (NixOS) systems
+        nixosConfigurations = {
+          actual = self.nixos-flake.lib.mkLinuxSystem {
+            imports = [
+              self.nixosModules.default # Defined in nixos/default.nix
+              inputs.sops-nix.nixosModules.sops
+              ./systems/hetzner/ex101.nix
+              ./nixos/server/harden.nix
+              ./nixos/docker.nix
+              ./nixos/lxd.nix
+              ./nixos/jenkins.nix
+            ];
+            services.tailscale.enable = true;
+            sops.defaultSopsFile = ./secrets.json;
+            sops.defaultSopsFormat = "json";
+          };
+        };
 
-    config.nixpkgs.overlays = [ inputs.prismlauncher.overlay ];
-
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-
-      alex = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
-        modules = [
-          ./home.nix
-          ./path.nix
-          ./shell.nix
-          ./user.nix
-          ./aliases.nix
-          ./programs.nix
-          # Host Specific configs
-          ./Alexs-MacBook-Pro-2.local/Alexs-MacBook-Pro-2.local.nix
-          ./Alexs-MacBook-Pro-2.local/user.nix
-        ];
+        # Configurations for my (only) macOS machine (using nix-darwin)
+        darwinConfigurations = {
+          Alexs-MBP = self.nixos-flake.lib.mkMacosSystem "aarch64-darwin" {
+            imports = [
+              self.darwinModules.default # Defined in nix-darwin/default.nix
+              ./systems/darwin.nix
+            ];
+          };
+        };
       };
 
+      perSystem = { self', system, pkgs, lib, config, inputs', ... }: {
+        # NOTE: These overlays apply to the Nix shell only. See `nix.nix` for
+        # system overlays.
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [
+            inputs.jenkins-nix-ci.overlay
+          ];
+        };
+
+        treefmt.config = {
+          projectRootFile = "flake.nix";
+          programs.nixpkgs-fmt.enable = true;
+          settings.formatter.nixpkgs-fmt.excludes =
+            let
+              nixosConfig = self.nixosConfigurations.actual;
+              jenkinsPluginsFile = nixosConfig.config.jenkins-nix-ci.plugins-file;
+            in
+            [ jenkinsPluginsFile ];
+        };
+
+        packages.default = self'.packages.activate;
+        devShells.default = pkgs.mkShell {
+          buildInputs = [
+            pkgs.nixpkgs-fmt
+            pkgs.sops
+            pkgs.ssh-to-age
+            (
+              let nixosConfig = self.nixosConfigurations.actual;
+              in nixosConfig.config.jenkins-nix-ci.nix-prefetch-jenkins-plugins pkgs
+            )
+          ];
+        };
+        formatter = config.treefmt.build.wrapper;
+      };
     };
-  };
 }
