@@ -1,124 +1,294 @@
 {
-  description = "Srid's NixOS / nix-darwin configuration";
+  description = "nix system configurations";
+
+  nixConfig = {
+    substituters = [
+      "https://cache.nixos.org"
+      "https://kclejeune.cachix.org"
+    ];
+
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "kclejeune.cachix.org-1:fOCrECygdFZKbMxHClhiTS6oowOkJ/I/dh9q9b1I4ko="
+    ];
+  };
 
   inputs = {
-    # Principle inputs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    nix-darwin.url = "github:lnl7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
-    nixos-flake.url = "github:srid/nixos-flake";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    # package repos
+    stable.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    devenv.url = "github:cachix/devenv/latest";
 
-    # CI server
-    sops-nix.url = "github:juspay/sops-nix/json-nested"; # https://github.com/Mic92/sops-nix/pull/328
-    jenkins-nix-ci.url = "github:juspay/jenkins-nix-ci";
-    # jenkins-nix-ci.url = "path:/home/srid/code/jenkins-nix-ci";
-    nix-serve-ng.url = "github:aristanetworks/nix-serve-ng";
+    # system management
+    nixos-hardware.url = "github:nixos/nixos-hardware";
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    # Software inputs
-    nixos-shell.url = "github:Mic92/nixos-shell";
-    nixos-vscode-server.flake = false;
-    nixos-vscode-server.url = "github:nix-community/nixos-vscode-server";
-    emanote.url = "github:srid/emanote";
-    nixpkgs-match.url = "github:srid/nixpkgs-match";
-    nuenv.url = "github:DeterminateSystems/nuenv";
-    nixd.url = "github:nix-community/nixd";
-
-    # Emacs
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
-
-    # Vim & its plugins (not in nixpkgs)
-    zk-nvim.url = "github:mickael-menu/zk-nvim";
-    zk-nvim.flake = false;
-    coc-rust-analyzer.url = "github:fannheyward/coc-rust-analyzer";
-    coc-rust-analyzer.flake = false;
-
-    # Devshell
+    # shell stuff
+    flake-utils.url = "github:numtide/flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs = inputs@{ flake-parts, self, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
-      imports = [
-        inputs.treefmt-nix.flakeModule
-        inputs.nixos-flake.flakeModule
-        ./users
-        ./home
-        ./nixos
-        ./nix-darwin
-      ];
+  outputs = {
+    self,
+    darwin,
+    devenv,
+    flake-utils,
+    home-manager,
+    ...
+  } @ inputs: let
+    inherit (flake-utils.lib) eachSystemMap;
 
-      flake = {
-        # Configurations for Linux (NixOS) systems
-        nixosConfigurations = {
-          actual = self.nixos-flake.lib.mkLinuxSystem {
-            imports = [
-              self.nixosModules.default # Defined in nixos/default.nix
-              inputs.sops-nix.nixosModules.sops
-              ./systems/hetzner/ex101.nix
-              ./nixos/server/harden.nix
-              ./nixos/docker.nix
-              ./nixos/lxd.nix
-              ./nixos/jenkins.nix
-            ];
-            services.tailscale.enable = true;
-            sops.defaultSopsFile = ./secrets.json;
-            sops.defaultSopsFormat = "json";
-          };
-        };
+    isDarwin = system: (builtins.elem system inputs.nixpkgs.lib.platforms.darwin);
+    homePrefix = system:
+      if isDarwin system
+      then "/Users"
+      else "/home";
+    defaultSystems = [
+      "aarch64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
+      "x86_64-linux"
+    ];
 
-        # Configurations for my (only) macOS machine (using nix-darwin)
-        darwinConfigurations = {
-          Alexs-MBP = self.nixos-flake.lib.mkMacosSystem "aarch64-darwin" {
-            imports = [
-              self.darwinModules.default # Defined in nix-darwin/default.nix
-              ./systems/darwin.nix
-            ];
-          };
-        };
+    # generate a base darwin configuration with the
+    # specified hostname, overlays, and any extraModules applied
+    mkDarwinConfig = {
+      system ? "aarch64-darwin",
+      nixpkgs ? inputs.nixpkgs,
+      baseModules ? [
+        home-manager.darwinModules.home-manager
+        ./modules/darwin
+      ],
+      extraModules ? [],
+    }:
+      inputs.darwin.lib.darwinSystem {
+        inherit system;
+        modules = baseModules ++ extraModules;
+        specialArgs = {inherit self inputs nixpkgs;};
       };
 
-      perSystem = { self', system, pkgs, lib, config, inputs', ... }: {
-        # NOTE: These overlays apply to the Nix shell only. See `nix.nix` for
-        # system overlays.
-        _module.args.pkgs = import inputs.nixpkgs {
+    # generate a base nixos configuration with the
+    # specified overlays, hardware modules, and any extraModules applied
+    mkNixosConfig = {
+      system ? "x86_64-linux",
+      nixpkgs ? inputs.nixos-unstable,
+      hardwareModules,
+      baseModules ? [
+        home-manager.nixosModules.home-manager
+        ./modules/nixos
+      ],
+      extraModules ? [],
+    }:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = baseModules ++ hardwareModules ++ extraModules;
+        specialArgs = {inherit self inputs nixpkgs;};
+      };
+
+    # generate a home-manager configuration usable on any unix system
+    # with overlays and any extraModules applied
+    mkHomeConfig = {
+      username,
+      system ? "x86_64-linux",
+      nixpkgs ? inputs.nixpkgs,
+      baseModules ? [
+        ./modules/home-manager
+        {
+          home = {
+            inherit username;
+            homeDirectory = "${homePrefix system}/${username}";
+            sessionVariables = {
+              NIX_PATH = "nixpkgs=${nixpkgs}:stable=${inputs.stable}\${NIX_PATH:+:}$NIX_PATH";
+            };
+          };
+        }
+      ],
+      extraModules ? [],
+    }:
+      inputs.home-manager.lib.homeManagerConfiguration rec {
+        pkgs = import nixpkgs {
           inherit system;
-          overlays = [
-            inputs.jenkins-nix-ci.overlay
-          ];
+          overlays = builtins.attrValues self.overlays;
         };
+        extraSpecialArgs = {inherit self inputs nixpkgs;};
+        modules = baseModules ++ extraModules;
+      };
 
-        treefmt.config = {
-          projectRootFile = "flake.nix";
-          programs.nixpkgs-fmt.enable = true;
-          settings.formatter.nixpkgs-fmt.excludes =
-            let
-              nixosConfig = self.nixosConfigurations.actual;
-              jenkinsPluginsFile = nixosConfig.config.jenkins-nix-ci.plugins-file;
-            in
-            [ jenkinsPluginsFile ];
-        };
-
-        packages.default = self'.packages.activate;
-        devShells.default = pkgs.mkShell {
-          buildInputs = [
-            pkgs.nixpkgs-fmt
-            pkgs.sops
-            pkgs.ssh-to-age
-            (
-              let nixosConfig = self.nixosConfigurations.actual;
-              in nixosConfig.config.jenkins-nix-ci.nix-prefetch-jenkins-plugins pkgs
-            )
-          ];
-        };
-        formatter = config.treefmt.build.wrapper;
+    mkChecks = {
+      arch,
+      os,
+      username ? "alex",
+    }: {
+      "${arch}-${os}" = {
+        "${username}_${os}" =
+          (
+            if os == "darwin"
+            then self.darwinConfigurations
+            else self.nixosConfigurations
+          )
+          ."${username}@${arch}-${os}"
+          .config
+          .system
+          .build
+          .toplevel;
+        "${username}_home" =
+          self.homeConfigurations."${username}@${arch}-${os}".activationPackage;
+        devShell = self.devShells."${arch}-${os}".default;
       };
     };
+  in {
+    checks =
+      {}
+      // (mkChecks {
+        arch = "aarch64";
+        os = "darwin";
+      })
+      // (mkChecks {
+        arch = "x86_64";
+        os = "darwin";
+      })
+      // (mkChecks {
+        arch = "aarch64";
+        os = "linux";
+      })
+      // (mkChecks {
+        arch = "x86_64";
+        os = "linux";
+      });
+
+    darwinConfigurations = {
+      "alex@aarch64-darwin" = mkDarwinConfig {
+        system = "aarch64-darwin";
+        extraModules = [./profiles/personal.nix ./modules/darwin/apps.nix];
+      };
+          };
+
+    nixosConfigurations = {
+      #      "kclejeune@aarch64-linux" = mkNixosConfig {
+      #  system = "aarch64-linux";
+      #  hardwareModules = [./modules/hardware/phil.nix];
+      #  extraModules = [./profiles/personal.nix];
+      #};
+    };
+
+    homeConfigurations = {
+         "alex@aarch64-darwin" = mkHomeConfig {
+        username = "alex";
+        system = "aarch64-darwin";
+        extraModules = [./profiles/home-manager/personal.nix];
+      };
+      
+    };
+
+    devShells = eachSystemMap defaultSystems (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = builtins.attrValues self.overlays;
+      };
+    in {
+      default = devenv.lib.mkShell {
+        inherit inputs pkgs;
+        modules = [
+          (import ./devenv.nix)
+        ];
+      };
+    });
+
+    packages = eachSystemMap defaultSystems (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = builtins.attrValues self.overlays;
+      };
+    in rec {
+      pyEnv =
+        pkgs.python3.withPackages
+        (ps: with ps; [black typer colorama shellingham]);
+      sysdo = pkgs.writeScriptBin "sysdo" ''
+        #! ${pyEnv}/bin/python3
+        ${builtins.readFile ./bin/do.py}
+      '';
+      cb = pkgs.writeShellScriptBin "cb" ''
+        #! ${pkgs.lib.getExe pkgs.bash}
+        # universal clipboard, stephen@niedzielski.com
+
+        shopt -s expand_aliases
+
+        # ------------------------------------------------------------------------------
+        # os utils
+
+        case "$OSTYPE$(uname)" in
+          [lL]inux*) TUX_OS=1 ;;
+         [dD]arwin*) MAC_OS=1 ;;
+          [cC]ygwin) WIN_OS=1 ;;
+                  *) echo "unknown os=\"$OSTYPE$(uname)\"" >&2 ;;
+        esac
+
+        is_tux() { [ ''${TUX_OS-0} -ne 0 ]; }
+        is_mac() { [ ''${MAC_OS-0} -ne 0 ]; }
+        is_win() { [ ''${WIN_OS-0} -ne 0 ]; }
+
+        # ------------------------------------------------------------------------------
+        # copy and paste
+
+        if is_mac; then
+          alias cbcopy=pbcopy
+          alias cbpaste=pbpaste
+        elif is_win; then
+          alias cbcopy=putclip
+          alias cbpaste=getclip
+        else
+          alias cbcopy='${pkgs.xclip} -sel c'
+          alias cbpaste='${pkgs.xclip} -sel c -o'
+        fi
+
+        # ------------------------------------------------------------------------------
+        cb() {
+          if [ ! -t 0 ] && [ $# -eq 0 ]; then
+            # no stdin and no call for --help, blow away the current clipboard and copy
+            cbcopy
+          else
+            cbpaste ''${@:+"$@"}
+          fi
+        }
+
+        # ------------------------------------------------------------------------------
+        if ! return 2>/dev/null; then
+          cb ''${@:+"$@"}
+        fi
+      '';
+    });
+
+    apps = eachSystemMap defaultSystems (system: rec {
+      sysdo = {
+        type = "app";
+        program = "${self.packages.${system}.sysdo}/bin/sysdo";
+      };
+      cb = {
+        type = "app";
+        program = "${self.packages.${system}.cb}/bin/cb";
+      };
+      default = sysdo;
+    });
+
+    overlays = {
+      channels = final: prev: {
+        # expose other channels via overlays
+        stable = import inputs.stable {system = prev.system;};
+      };
+      extraPackages = final: prev: {
+        sysdo = self.packages.${prev.system}.sysdo;
+        pyEnv = self.packages.${prev.system}.pyEnv;
+        cb = self.packages.${prev.system}.cb;
+        devenv = self.packages.${prev.system}.devenv;
+      };
+    };
+  };
 }
