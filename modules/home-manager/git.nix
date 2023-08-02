@@ -12,6 +12,9 @@
         then "osxkeychain"
         else "cache --timeout=1000000000";
       commit.verbose = true;
+      commit.gpgsign = true;
+      gpg.format = "ssh";
+      user.signingkey = "~/.ssh/id_ed25519.pub";
       fetch.prune = true;
       http.sslVerify = true;
       init.defaultBranch = "main";

@@ -15,6 +15,7 @@
     ./nvim
     ./shell.nix
     ./ssh.nix
+    ./gradle.nix
     ./tldr.nix
     ./tmux.nix
   ];
