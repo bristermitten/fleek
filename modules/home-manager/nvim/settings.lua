@@ -21,10 +21,10 @@ vim.opt.hlsearch = true
 vim.opt.foldenable = false
 
 function vim.fn.stripTrailingWhitespace()
-    local l = vim.fn.line(".")
-    local c = vim.fn.col(".")
-    vim.cmd("%s/\\s\\+$//e")
-    vim.fn.cursor(l, c)
+	local l = vim.fn.line(".")
+	local c = vim.fn.col(".")
+	vim.cmd("%s/\\s\\+$//e")
+	vim.fn.cursor(l, c)
 end
 
 -- strip all files by default

@@ -22,8 +22,6 @@
       "teamookla/speedtest"
     ];
     casks = [
-      "1password"
-      "1password-cli"
       "alt-tab"
       "appcleaner"
       "bartender"

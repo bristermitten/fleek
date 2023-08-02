@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./bat.nix
+    ./discord.nix
     ./direnv.nix
     ./dotfiles
     ./fzf.nix
@@ -55,12 +56,13 @@
       # age
       alejandra
       cachix
-      cb
       cirrus-cli
       comma
       coreutils-full
       curl
+      discord
       diffutils
+
       fd
       ffmpeg
       findutils
@@ -103,6 +105,7 @@
       rsync
       (ruby.withPackages (ps: with ps; [rufo solargraph]))
       shellcheck
+      spotify
       stylua
       sysdo
       terraform

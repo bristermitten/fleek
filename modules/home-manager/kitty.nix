@@ -21,7 +21,7 @@ in {
       enable_audio_bell = "no";
       term = "xterm-256color";
       macos_titlebar_color = "background";
-      macos_option_as_alt = "yes";
+      macos_option_as_alt = "no";
       scrollback_lines = 10000;
       shell_integration = "no-cursor";
     };

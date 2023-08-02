@@ -20,13 +20,13 @@
       # silent clicking = 0, default = 1
       ActuationStrength = 0;
       # enable tap to click
-      Clicking = true;
+      Clicking = false;
       # firmness level, 0 = lightest, 2 = heaviest
       FirstClickThreshold = 1;
       # firmness level for force touch
       SecondClickThreshold = 1;
-      # don't allow positional right click
-      TrackpadRightClick = false;
+      # allow positional right click
+      TrackpadRightClick = true;
       # three finger drag for space switching
       # TrackpadThreeFingerDrag = true;
     };
@@ -42,7 +42,7 @@
     # dock settings
     dock = {
       # auto show and hide dock
-      autohide = true;
+      autohide = false;
       # remove delay for showing dock
       autohide-delay = 0.0;
       # how fast is the dock showing animation
@@ -62,9 +62,9 @@
       # allow key repeat
       ApplePressAndHoldEnabled = false;
       # delay before repeating keystrokes
-      InitialKeyRepeat = 10;
+      InitialKeyRepeat = 30;
       # delay between repeated keystrokes upon holding a key
-      KeyRepeat = 1;
+      KeyRepeat = 3;
       AppleShowAllExtensions = true;
       AppleShowScrollBars = "Automatic";
     };

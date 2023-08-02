@@ -10,7 +10,13 @@
     ./nixpkgs.nix
   ];
 
-  nixpkgs.overlays = builtins.attrValues self.overlays;
+  nixpkgs.overlays =
+    builtins.attrValues self.overlays
+    ++ (let
+      myOverlay = self: super: {
+        discord-ptb = super.discord-ptb.override {withOpenASAR = true;};
+      };
+    in [myOverlay]);
 
   programs.zsh = {
     enable = true;
@@ -19,7 +25,7 @@
   };
 
   user = {
-    description = "Kennan LeJeune";
+    description = "Alexander Wood";
     home = "${
       if pkgs.stdenvNoCC.isDarwin
       then "/Users"
@@ -32,7 +38,6 @@
   hm = {
     imports = [
       ./home-manager
-      ./home-manager/1password.nix
     ];
   };
 

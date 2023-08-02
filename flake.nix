@@ -77,21 +77,6 @@
 
     # generate a base nixos configuration with the
     # specified overlays, hardware modules, and any extraModules applied
-    mkNixosConfig = {
-      system ? "x86_64-linux",
-      nixpkgs ? inputs.nixos-unstable,
-      hardwareModules,
-      baseModules ? [
-        home-manager.nixosModules.home-manager
-        ./modules/nixos
-      ],
-      extraModules ? [],
-    }:
-      nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = baseModules ++ hardwareModules ++ extraModules;
-        specialArgs = {inherit self inputs nixpkgs;};
-      };
 
     # generate a home-manager configuration usable on any unix system
     # with overlays and any extraModules applied
@@ -169,23 +154,17 @@
         system = "aarch64-darwin";
         extraModules = [./profiles/personal.nix ./modules/darwin/apps.nix];
       };
-          };
+    };
 
     nixosConfigurations = {
-      #      "kclejeune@aarch64-linux" = mkNixosConfig {
-      #  system = "aarch64-linux";
-      #  hardwareModules = [./modules/hardware/phil.nix];
-      #  extraModules = [./profiles/personal.nix];
-      #};
     };
 
     homeConfigurations = {
-         "alex@aarch64-darwin" = mkHomeConfig {
+      "alex@aarch64-darwin" = mkHomeConfig {
         username = "alex";
         system = "aarch64-darwin";
         extraModules = [./profiles/home-manager/personal.nix];
       };
-      
     };
 
     devShells = eachSystemMap defaultSystems (system: let
@@ -283,6 +262,7 @@
         # expose other channels via overlays
         stable = import inputs.stable {system = prev.system;};
       };
+
       extraPackages = final: prev: {
         sysdo = self.packages.${prev.system}.sysdo;
         pyEnv = self.packages.${prev.system}.pyEnv;

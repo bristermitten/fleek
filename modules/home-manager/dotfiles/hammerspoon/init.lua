@@ -15,15 +15,15 @@ Install = spoon.SpoonInstall
 
 -- Draw pretty rounded corners on all screens
 Install:andUse("RoundedCorners", {
-    start = true,
-    config = {
-        radius = 12,
-    },
+	start = true,
+	config = {
+		radius = 12,
+	},
 })
 
 -- use as a replacement for ReloadConfiguration for now
 hs.hotkey.bind({ "cmd", "ctrl", "shift" }, "r", function()
-    hs.reload()
+	hs.reload()
 end)
 -- TODO: why is this infinitely reloading?
 -- Install:andUse("ReloadConfiguration", {
@@ -34,7 +34,7 @@ end)
 -- })
 
 Install:andUse("Caffeine", {
-    start = true,
+	start = true,
 })
 
 -- import keybindings for yabai
