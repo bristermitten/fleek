@@ -15,9 +15,11 @@
     ./nvim
     ./shell.nix
     ./ssh.nix
+    ./haskell.nix
     ./gradle.nix
     ./tldr.nix
     ./tmux.nix
+    ./vscode.nix
   ];
 
   nixpkgs.config = {
@@ -46,76 +48,28 @@
       NODE_PATH = "${NODE_GLOBAL}/lib";
     };
     sessionPath = [
-      "${NODE_GLOBAL}/bin"
       "${config.home.homeDirectory}/.rd/bin"
       "${config.home.homeDirectory}/.local/bin"
     ];
 
     # define package definitions for current user environment
     packages = with pkgs; [
-      awscli2
-      # age
       alejandra
+      bitwarden-cli
       cachix
-      cirrus-cli
-      comma
-      coreutils-full
-      curl
       discord
-      diffutils
-
-      fd
-      ffmpeg
-      findutils
-      flyctl
-      gawk
-      gnugrep
+      element-desktop
       gnupg
-      gnused
-      google-cloud-sdk
-      helm-docs
-      httpie
-      hurl
-      kubectl
-      kubectx
-      kubernetes-helm
-      kustomize
-      lazydocker
-      luajit
-      mmv
-      ncdu
       neofetch
-      nix
       nixfmt
+      openjdk
       nixpkgs-fmt
-      nodejs-18_x
-      parallel
-      poetry
       pre-commit
-      # python with default packages
-      (python3.withPackages
-        (ps:
-          with ps; [
-            numpy
-            scipy
-            matplotlib
-            networkx
-          ]))
-      ranger
-      rclone
-      rsync
-      (ruby.withPackages (ps: with ps; [rufo solargraph]))
       shellcheck
       spotify
-      stylua
       sysdo
-      terraform
       tree
       treefmt
-      trivy
-      vagrant
-      yarn
-      yq-go
     ];
   };
 
@@ -124,23 +78,14 @@
       enable = true;
     };
     dircolors.enable = true;
-    go.enable = true;
     gpg.enable = true;
     htop.enable = true;
     jq.enable = true;
-    java = {
-      enable = true;
-      package = pkgs.jdk17;
-    };
-    k9s.enable = true;
     lazygit.enable = true;
     less.enable = true;
     man.enable = true;
     nix-index.enable = true;
-    pandoc.enable = true;
-    ripgrep.enable = true;
     starship.enable = true;
-    yt-dlp.enable = true;
     zathura.enable = true;
     zoxide.enable = true;
   };

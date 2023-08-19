@@ -55,10 +55,7 @@
       then "/Users"
       else "/home";
     defaultSystems = [
-      "aarch64-linux"
       "aarch64-darwin"
-      "x86_64-darwin"
-      "x86_64-linux"
     ];
 
     # generate a base darwin configuration with the
@@ -85,7 +82,7 @@
     # with overlays and any extraModules applied
     mkHomeConfig = {
       username,
-      system ? "x86_64-linux",
+      system ? "aarch64-darwin",
       nixpkgs ? inputs.nixpkgs,
       baseModules ? [
         ./modules/home-manager
@@ -141,18 +138,6 @@
       // (mkChecks {
         arch = "aarch64";
         os = "darwin";
-      })
-      // (mkChecks {
-        arch = "x86_64";
-        os = "darwin";
-      })
-      // (mkChecks {
-        arch = "aarch64";
-        os = "linux";
-      })
-      // (mkChecks {
-        arch = "x86_64";
-        os = "linux";
       });
 
     darwinConfigurations = {
