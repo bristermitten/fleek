@@ -23,6 +23,7 @@
       "obs"
       "flux"
       "clockify"
+      "messenger"
     ];
   };
 }
