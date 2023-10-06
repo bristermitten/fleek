@@ -3,7 +3,7 @@
     userEmail = "alexljwood24@hotmail.co.uk";
     userName = "Alexander Wood";
     signing = {
-      key = "alexljwood24@hotmail.co.uk";
+      key = "~/.ssh/id_ed25519.pub";
       signByDefault = true;
     };
   };

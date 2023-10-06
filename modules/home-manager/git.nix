@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   home.packages = [pkgs.github-cli pkgs.git-crypt];
   programs.git = {
-    userName = "Alexander Wood";
     enable = true;
     aliases = {
       ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
@@ -14,7 +13,6 @@
       commit.verbose = true;
       commit.gpgsign = true;
       gpg.format = "ssh";
-      user.signingkey = "~/.ssh/id_ed25519.pub";
       fetch.prune = true;
       http.sslVerify = true;
       init.defaultBranch = "main";
