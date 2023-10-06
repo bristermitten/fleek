@@ -5,6 +5,7 @@
       brewfile = true;
     };
     brews = [
+      "llvm@15"
     ];
 
     taps = [

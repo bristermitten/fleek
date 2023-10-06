@@ -72,6 +72,7 @@
       # languages
       python3
       ruby
+      go
     ];
     etc = {
       home-manager.source = "${inputs.home-manager}";
