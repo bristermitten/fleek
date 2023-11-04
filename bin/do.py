@@ -108,6 +108,8 @@ def bootstrap(
     cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
     flags = [
         "-v",
+        "--show-trace",
+        "--no-eval-cache",
         "--experimental-features",
         "nix-command flakes",
         "--extra-substituters",
@@ -142,6 +144,7 @@ def bootstrap(
             + [
                 "github:nix-community/home-manager",
                 "--no-write-lock-file",
+                "--show-trace",
                 "--",
                 "switch",
                 "--flake",
@@ -305,7 +308,7 @@ def switch(
     elif cfg == FlakeOutputs.DARWIN:
         cmd = f"darwin-rebuild switch --flake"
     elif cfg == FlakeOutputs.HOME_MANAGER:
-        cmd = f"home-manager switch --flake"
+        cmd = f"home-manager switch --flake --show-trace"
     else:
         typer.secho("could not infer system type.", fg=Colors.ERROR.value)
         raise typer.Abort()

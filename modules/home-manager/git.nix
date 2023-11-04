@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   home.packages = [pkgs.github-cli pkgs.git-crypt];
   programs.git = {
+    userName = "Alexander Wood";
     enable = true;
     aliases = {
       ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";

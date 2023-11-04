@@ -34,8 +34,6 @@
     # shell stuff
     flake-utils.url = "github:numtide/flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
-
-    sops-nix.url = "github:Mic92/sops-nix";
   };
 
   outputs = {
@@ -44,7 +42,6 @@
     devenv,
     flake-utils,
     home-manager,
-    sops-nix,
     ...
   } @ inputs: let
     inherit (flake-utils.lib) eachSystemMap;
@@ -56,6 +53,7 @@
       else "/home";
     defaultSystems = [
       "aarch64-darwin"
+      "x86_64-linux"
     ];
 
     # generate a base darwin configuration with the
@@ -86,12 +84,9 @@
       nixpkgs ? inputs.nixpkgs,
       baseModules ? [
         ./modules/home-manager
-        sops-nix.nixosModules.sops
         {
           home = {
             inherit username;
-            imports = [inputs.sops-nix.nixosModules.sops];
-            sops.defaultSopsFile = ./secrets/example.yaml;
             homeDirectory = "${homePrefix system}/${username}";
             sessionVariables = {
               NIX_PATH = "nixpkgs=${nixpkgs}:stable=${inputs.stable}\${NIX_PATH:+:}$NIX_PATH";
@@ -138,6 +133,10 @@
       // (mkChecks {
         arch = "aarch64";
         os = "darwin";
+      })
+      // (mkChecks {
+        arch = "x86_64";
+        os = "linux";
       });
 
     darwinConfigurations = {
@@ -154,6 +153,12 @@
       "alex@aarch64-darwin" = mkHomeConfig {
         username = "alex";
         system = "aarch64-darwin";
+        extraModules = [./profiles/home-manager/personal.nix];
+      };
+
+      "alex@x86_64-linux" = mkHomeConfig {
+        username = "alex";
+        system = "x86_64-linux";
         extraModules = [./profiles/home-manager/personal.nix];
       };
     };
