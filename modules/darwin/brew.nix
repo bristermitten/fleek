@@ -6,6 +6,8 @@
     };
     brews = [
       "llvm@15"
+      "graphviz"
+      "ffmpeg"
     ];
 
     taps = [
@@ -25,6 +27,8 @@
       "flux"
       "clockify"
       "messenger"
+      "vlc"
+      "whatsapp"
     ];
   };
 }
