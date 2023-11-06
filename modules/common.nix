@@ -15,6 +15,7 @@
     ++ (let
       myOverlay = self: super: {
         discord-ptb = super.discord-ptb.override {withOpenASAR = true;};
+        haskell-language-server = super.haskell-language-server.override {supportedGhcVersions = ["96"];};
       };
     in [myOverlay]);
 
