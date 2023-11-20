@@ -13,9 +13,20 @@
   nixpkgs.overlays =
     builtins.attrValues self.overlays
     ++ (let
+      fixCyclicReference = drv:
+        pkgs.haskell.lib.overrideCabal drv (_: {
+          enableSeparateBinOutput = false;
+        });
       myOverlay = self: super: {
         discord-ptb = super.discord-ptb.override {withOpenASAR = true;};
-        haskell-language-server = super.haskell-language-server.override {supportedGhcVersions = ["96"];};
+        haskell-language-server =
+          super
+          .haskellPackages
+          .haskell-language-server
+          .overrideScope (lself: lsuper: {
+            supportedGhcVersions = ["96"];
+            ormolu = fixCyclicReference super.haskellPackages.ormolu;
+          });
       };
     in [myOverlay]);
 
