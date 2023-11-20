@@ -17,7 +17,7 @@
 
       Host seis
             HostName seis.bris.ac.uk
-            UserName fi22264
+            User fi22264
 
 
     '';
