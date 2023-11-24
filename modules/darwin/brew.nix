@@ -21,12 +21,12 @@
       "bartender"
       "jetbrains-toolbox"
       "raycast"
-      "bigwig-club/brew/upic"
       "steam"
       "obs"
       "flux"
       "clockify"
       "messenger"
+      "magiccap"
       "vlc"
       "whatsapp"
     ];
