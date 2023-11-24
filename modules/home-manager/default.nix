@@ -63,12 +63,14 @@
       neofetch
       nixfmt
       openjdk
+      obsidian
       nixpkgs-fmt
       pre-commit
       shellcheck
       spotify
       sysdo
       tree
+
       treefmt
     ];
   };
