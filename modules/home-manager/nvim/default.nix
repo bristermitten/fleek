@@ -2,9 +2,12 @@
   config,
   pkgs,
   lib,
+  home,
   ...
 }: {
   imports = [./plugins];
+
+  home.packages = [pkgs.ranger];
 
   lib.vimUtils = rec {
     # For plugins configured with lua
@@ -50,7 +53,10 @@
       vim-sandwich
       vim-commentary
       vim-nix
+      haskell-tools-nvim
+      vim-ormolu
 
+      presence-nvim
       # vim addon utilities
       direnv-vim
       ranger-vim
