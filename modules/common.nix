@@ -19,12 +19,13 @@
         });
       myOverlay = self: super: {
         discord-ptb = super.discord-ptb.override {withOpenASAR = true;};
-        haskell-language-server =
+        hls =
           super
-          .haskellPackages
+          .haskell
+          .packages
+          .ghc94
           .haskell-language-server
           .overrideScope (lself: lsuper: {
-            supportedGhcVersions = ["96"];
             ormolu = fixCyclicReference super.haskellPackages.ormolu;
           });
       };

@@ -9,7 +9,9 @@
 
       Host github-uni
               HostName github.com
+              User fi22264
               IdentityFile ~/.ssh/id_ed25519_uni
+              IdentitiesOnly=yes
 
       Host lab
               HostName rd-mvb-linuxlab.bristol.ac.uk

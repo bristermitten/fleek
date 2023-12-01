@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    haskell.compiler.ghc96
-    haskell-language-server
+    haskell.compiler.ghc94
+    hls
     cabal-install
   ];
 }

@@ -109,6 +109,7 @@ def bootstrap(
     flags = [
         "-v",
         "--show-trace",
+        "--impure",
         "--no-eval-cache",
         "--experimental-features",
         "nix-command flakes",
@@ -145,6 +146,7 @@ def bootstrap(
                 "github:nix-community/home-manager",
                 "--no-write-lock-file",
                 "--show-trace",
+                "--impure",
                 "--",
                 "switch",
                 "--flake",
