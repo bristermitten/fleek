@@ -1,5 +1,5 @@
 {...}: {
-  # homebrew.extraConfig = ''
-  #   brew "yabai", restart_service: "changed"
-  # '';
+  homebrew.extraConfig = ''
+    brew "yabai", restart_service: "changed"
+  '';
 }

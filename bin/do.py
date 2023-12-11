@@ -110,6 +110,7 @@ def bootstrap(
         "-v",
         "--show-trace",
         "--impure",
+        "--debug",
         "--no-eval-cache",
         "--experimental-features",
         "nix-command flakes",
@@ -135,7 +136,7 @@ def bootstrap(
         flake = f"{bootstrap_flake}#{cfg.value}.{host}.config.system.build.toplevel"
         run_cmd(["nix", "build", flake] + flags)
         run_cmd(
-            f"./result/sw/bin/darwin-rebuild switch --flake {FLAKE_PATH}#{host}".split()
+            f"./result/sw/bin/darwin-rebuild switch --impure --flake {FLAKE_PATH}#{host}".split()
         )
     elif cfg == FlakeOutputs.HOME_MANAGER:
         flake = f"{bootstrap_flake}#{host}"
@@ -194,7 +195,7 @@ def build(
     else:
         flake = f"{FLAKE_PATH}#{host}"
 
-    flags = ["--show-trace"]
+    flags = ["--show-trace", "--impure", "--debug"]
     run_cmd(cmd + [flake] + flags)
 
 
@@ -310,7 +311,7 @@ def switch(
     elif cfg == FlakeOutputs.DARWIN:
         cmd = f"darwin-rebuild switch --flake"
     elif cfg == FlakeOutputs.HOME_MANAGER:
-        cmd = f"home-manager switch --flake --show-trace"
+        cmd = f"home-manager switch --impure --flake --show-trace"
     else:
         typer.secho("could not infer system type.", fg=Colors.ERROR.value)
         raise typer.Abort()
@@ -319,7 +320,7 @@ def switch(
         flake = f"{REMOTE_FLAKE}#{host}"
     else:
         flake = f"{FLAKE_PATH}#{host}"
-    flags = ["--show-trace"]
+    flags = ["--show-trace", "--impure", "--debug"]
     run_cmd(cmd.split() + [flake] + flags)
 
 
