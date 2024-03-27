@@ -8,6 +8,7 @@
       "llvm@15"
       "graphviz"
       "ffmpeg"
+      "watchman"
     ];
 
     taps = [
@@ -18,7 +19,9 @@
     ];
     casks = [
       "alt-tab"
+      "altair-graphql-client"
       "bartender"
+      "google-chrome"
       "jetbrains-toolbox"
       "raycast"
       "steam"
@@ -29,6 +32,7 @@
       "magiccap"
       "vlc"
       "whatsapp"
+      "plex"
     ];
   };
 }

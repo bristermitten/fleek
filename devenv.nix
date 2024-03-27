@@ -6,7 +6,6 @@
   ...
 }: {
   packages = [
-    pkgs.rnix-lsp
     self.packages.${pkgs.system}.pyEnv
     (inputs.treefmt-nix.lib.mkWrapper pkgs (import ./treefmt.nix))
   ];

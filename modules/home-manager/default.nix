@@ -69,9 +69,10 @@
       shellcheck
       spotify
       sysdo
+      rbenv
       tree
-
       treefmt
+      idb-companion
     ];
   };
 

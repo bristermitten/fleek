@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    haskell.compiler.ghc94
-    hls
+    haskell.compiler.ghc96
+    #hls
     cabal-install
     haskellPackages.fourmolu
   ];

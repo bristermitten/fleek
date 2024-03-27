@@ -69,7 +69,7 @@
       neovim
 
       # standard toolset
-      coreutils-full
+      #coreutils-full
       findutils
       diffutils
       curl
@@ -84,7 +84,8 @@
 
       # languages
       python3
-      ruby
+      python311Packages.pip
+      nodejs_20
       go
     ];
     etc = {

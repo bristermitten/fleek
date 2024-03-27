@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   ...
@@ -20,11 +19,9 @@
       target = ".zfunc";
       recursive = true;
     };
-    npmrc = {
-      text = ''
-        prefix = ${config.home.sessionVariables.NODE_PATH};
-      '';
-      target = ".npmrc";
+    yabai = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+      source = ./yabai;
+      recursive = true;
     };
   };
 

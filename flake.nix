@@ -185,7 +185,7 @@
     in rec {
       pyEnv =
         pkgs.python3.withPackages
-        (ps: with ps; [black typer colorama shellingham]);
+        (ps: with ps; [pip black typer colorama shellingham ipykernel]);
       sysdo = pkgs.writeScriptBin "sysdo" ''
         #! ${pyEnv}/bin/python3
         ${builtins.readFile ./bin/do.py}

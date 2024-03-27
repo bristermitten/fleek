@@ -44,13 +44,17 @@ in {
       fpath+=~/.zfunc
     '';
     initExtra = ''
-      ${functions}
-      ${lib.optionalString pkgs.stdenvNoCC.isDarwin ''
+            ${functions}
+            ${lib.optionalString pkgs.stdenvNoCC.isDarwin ''
         if [[ -d /opt/homebrew ]]; then
           eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
       ''}
-      unset RPS1
+            unset RPS1
+
+            export ANDROID_HOME=$HOME/Library/Android/sdk
+      export PATH=$PATH:$ANDROID_HOME/emulator
+      export PATH=$PATH:$ANDROID_HOME/platform-tools
     '';
     profileExtra = ''
       ${lib.optionalString pkgs.stdenvNoCC.isLinux "[[ -e /etc/profile ]] && source /etc/profile"}
@@ -64,6 +68,10 @@ in {
         file = "fast-syntax-highlighting.plugin.zsh";
       })
       (mkZshPlugin {pkg = zsh-history-substring-search;})
+      (mkZshPlugin {
+        pkg = asdf;
+        file = "asdf.zsh";
+      })
     ];
     oh-my-zsh = {
       enable = true;
@@ -76,10 +84,6 @@ in {
     shellAliases = aliases;
     initExtra = ''
       ${functions}
-      if [[ -d "${config.home.homeDirectory}/.asdf/" ]]; then
-        . "${config.home.homeDirectory}/.asdf/asdf.sh"
-        . "${config.home.homeDirectory}/.asdf/completions/asdf.bash"
-      fi
     '';
   };
 }
