@@ -28,7 +28,7 @@
     };
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "stable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # shell stuff

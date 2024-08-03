@@ -8,7 +8,6 @@
       "llvm@15"
       "graphviz"
       "ffmpeg"
-      "watchman"
     ];
 
     taps = [
@@ -19,7 +18,6 @@
     ];
     casks = [
       "alt-tab"
-      "altair-graphql-client"
       "bartender"
       "google-chrome"
       "jetbrains-toolbox"
@@ -29,7 +27,6 @@
       "flux"
       "clockify"
       "messenger"
-      "magiccap"
       "vlc"
       "whatsapp"
       "plex"

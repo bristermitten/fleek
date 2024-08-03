@@ -61,7 +61,7 @@
       element-desktop
       gnupg
       neofetch
-      nixfmt
+      nixfmt-rfc-style
       openjdk
       obsidian
       nixpkgs-fmt

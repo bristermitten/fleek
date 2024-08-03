@@ -46,7 +46,9 @@ else:
     # in all other cases of linux
     PLATFORM = FlakeOutputs.HOME_MANAGER
 
-USERNAME = subprocess.run(["id", "-un"], capture_output=True).stdout.decode().strip()
+USERNAME = os.getenv(
+    "USER", subprocess.run(["id", "-un"], capture_output=True).stdout.decode().strip()
+)
 SYSTEM_ARCH = "aarch64" if UNAME.machine == "arm64" else UNAME.machine
 SYSTEM_OS = UNAME.system.lower()
 DEFAULT_HOST = f"{USERNAME}@{SYSTEM_ARCH}-{SYSTEM_OS}"
@@ -108,10 +110,6 @@ def bootstrap(
     cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
     flags = [
         "-v",
-        "--show-trace",
-        "--impure",
-        "--debug",
-        "--no-eval-cache",
         "--experimental-features",
         "nix-command flakes",
         "--extra-substituters",
@@ -136,7 +134,7 @@ def bootstrap(
         flake = f"{bootstrap_flake}#{cfg.value}.{host}.config.system.build.toplevel"
         run_cmd(["nix", "build", flake] + flags)
         run_cmd(
-            f"./result/sw/bin/darwin-rebuild switch --impure --flake {FLAKE_PATH}#{host}".split()
+            f"./result/sw/bin/darwin-rebuild switch --flake {FLAKE_PATH}#{host}".split()
         )
     elif cfg == FlakeOutputs.HOME_MANAGER:
         flake = f"{bootstrap_flake}#{host}"
@@ -146,8 +144,6 @@ def bootstrap(
             + [
                 "github:nix-community/home-manager",
                 "--no-write-lock-file",
-                "--show-trace",
-                "--impure",
                 "--",
                 "switch",
                 "--flake",
@@ -195,7 +191,7 @@ def build(
     else:
         flake = f"{FLAKE_PATH}#{host}"
 
-    flags = ["--show-trace", "--impure", "--debug"]
+    flags = ["--show-trace"]
     run_cmd(cmd + [flake] + flags)
 
 
@@ -311,7 +307,7 @@ def switch(
     elif cfg == FlakeOutputs.DARWIN:
         cmd = f"darwin-rebuild switch --flake"
     elif cfg == FlakeOutputs.HOME_MANAGER:
-        cmd = f"home-manager switch --impure --flake --show-trace"
+        cmd = f"home-manager switch --flake"
     else:
         typer.secho("could not infer system type.", fg=Colors.ERROR.value)
         raise typer.Abort()
@@ -320,7 +316,7 @@ def switch(
         flake = f"{REMOTE_FLAKE}#{host}"
     else:
         flake = f"{FLAKE_PATH}#{host}"
-    flags = ["--show-trace", "--impure", "--debug"]
+    flags = ["--show-trace"]
     run_cmd(cmd.split() + [flake] + flags)
 
 

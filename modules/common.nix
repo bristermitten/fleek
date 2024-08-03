@@ -98,7 +98,6 @@
   };
 
   fonts = {
-    fontDir.enable = true;
-    fonts = with pkgs; [jetbrains-mono];
+    packages = with pkgs; [jetbrains-mono];
   };
 }
